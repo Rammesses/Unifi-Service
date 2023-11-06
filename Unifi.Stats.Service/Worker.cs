@@ -25,9 +25,9 @@ namespace Unifi.Stats.Service
             IOptions<UnifiServiceOptions> options,
             ILogger<Worker> logger)
         {
-            this.mediator = mediator;
-            this.options = options.Value;
-            this.logger = logger;
+            this.mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+            this.options = options?.Value ?? throw new ArgumentNullException(nameof(options));
+            this.logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task StartAsync(CancellationToken stoppingToken)

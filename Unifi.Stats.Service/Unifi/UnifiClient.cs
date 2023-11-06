@@ -15,9 +15,11 @@ namespace Unifi.Stats.Service.Unifi
 
         public UnifiClient(UniFiApi innerClient, IOptions<UnifiClientOptions> options)
         {
-            this.options = options;
-            this.innerClient = innerClient;
+            this.innerClient = innerClient ?? throw new ArgumentNullException(nameof(innerClient));
+            this.options = options ?? throw new ArgumentNullException(nameof(options));
         }
+
+        public override string ToString() => $"{nameof(UnifiClient)} - {this.Options.ControllerUri} / {this.Options.SiteName}";
 
         public UnifiClientOptions Options => this.options.Value;
 

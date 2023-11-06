@@ -102,7 +102,8 @@ namespace Unifi.Stats.Service.Unifi
             if ((method == Method.POST || method == Method.PUT) && jsonBody != null)
                 request.AddJsonBody(jsonBody);
             var envelope = await ExecuteRequest<T>(request);
-            return (envelope.Data == null) ? default(T) : envelope.Data[0];
+            
+            return (envelope.Data == null || envelope.Data.Length == 0) ? default(T) : envelope.Data[0];
         }
 
         private async Task<IList<T>> UniFiRequestMany<T>(Method method, string url, object jsonBody = null) where T : new()
@@ -114,9 +115,9 @@ namespace Unifi.Stats.Service.Unifi
             return (envelope.Data == null) ? new List<T>() : new List<T>(envelope.Data);
         }
 
-        public async Task Authenticate()
+        public async Task<JsonLoginResult> Authenticate()
         {
-            await UniFiPost("api/login", new
+            return await UniFiPost<JsonLoginResult>("api/login", new
             {
                 username = _username,
                 password = _password,
